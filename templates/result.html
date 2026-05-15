@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Result - AI Credit Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1628;
+            --secondary: #00d4ff;
+            --accent: #00c896;
+            --warning: #ffb800;
+            --danger: #ff4757;
+            --bg: #0f1a2e;
+            --card-bg: #152238;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient: linear-gradient(135deg, #00d4ff 0%, #00c896 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 22, 40, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            background: var(--text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        /* Main Content */
+        .main {
+            padding: 8rem 2rem 4rem;
+            min-height: 100vh;
+            background: 
+                radial-gradient(ellipse at 30% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0, 200, 150, 0.08) 0%, transparent 50%),
+                var(--bg);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Result Header */
+        .result-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .result-icon.approved {
+            background: rgba(0, 200, 150, 0.15);
+            border: 3px solid var(--accent);
+        }
+
+        .result-icon.pending {
+            background: rgba(255, 184, 0, 0.15);
+            border: 3px solid var(--warning);
+        }
+
+        .result-icon.rejected {
+            background: rgba(255, 71, 87, 0.15);
+            border: 3px solid var(--danger);
+        }
+
+        .result-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-title.approved { color: var(--accent); }
+        .result-title.pending { color: var(--warning); }
+        .result-title.rejected { color: var(--danger); }
+
+        .result-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Score Display */
+        .score-display {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .main-score {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 6px;
+            background: var(--gradient);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .score-circle.approved::before {
+            background: var(--accent);
+        }
+
+        .score-circle.pending::before {
+            background: var(--warning);
+        }
+
+        .score-circle.rejected::before {
+            background: var(--danger);
+        }
+
+        .score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-circle.approved .score-value { color: var(--accent); }
+        .score-circle.pending .score-value { color: var(--warning); }
+        .score-circle.rejected .score-value { color: var(--danger); }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        /* Score Breakdown */
+        .score-breakdown h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .breakdown-info {
+            flex: 1;
+        }
+
+        .breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.375rem;
+        }
+
+        .breakdown-name {
+            font-weight: 500;
+        }
+
+        .breakdown-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--secondary);
+        }
+
+        .breakdown-bar {
+            height: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .breakdown-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .breakdown-fill.approved { background: var(--accent); }
+        .breakdown-fill.pending { background: var(--warning); }
+        .breakdown-fill.rejected { background: var(--danger); }
+
+        .breakdown-weight {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .detail-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .detail-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .detail-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-card h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .detail-value.mono {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--secondary);
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .score-display {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">AI<span>Credit</span></div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/apply">Apply</a>
+                <a href="/dashboard">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Result Header -->
+            <div class="result-header">
+                <div class="result-icon {{ application.status|lower }}">
+                    {% if application.status == 'APPROVED' %}✓{% elif application.status == 'PENDING' %}⏳{% else %}✗{% endif %}
+                </div>
+                <h1 class="result-title {{ application.status|lower }}">{{ application.status }}</h1>
+                <p class="result-subtitle">Application #{{ application.id }} - {{ application.created_at[:10] }}</p>
+            </div>
+
+            <!-- Score Display -->
+            <div class="score-display">
+                <div class="main-score">
+                    <div class="score-circle {{ application.status|lower }}">
+                        <div class="score-value">{{ application.ai_score|int }}</div>
+                        <div class="score-label">AI Score</div>
+                    </div>
+                </div>
+                
+                <div class="score-breakdown">
+                    <h3>Score Breakdown</h3>
+                    <div class="breakdown-items">
+                        {% for key, comp in components.items() %}
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <div class="breakdown-header">
+                                    <span class="breakdown-name">{{ comp.name }}</span>
+                                    <span class="breakdown-value">{{ comp.value|int }}/100</span>
+                                </div>
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill {{ application.status|lower }}" style="width: {{ comp.value }}%"></div>
+                                </div>
+                            </div>
+                            <span class="breakdown-weight">{{ comp.weight }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="details-grid">
+                <div class="detail-card">
+                    <h3>Personal Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">{{ application.applicant_name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ application.email }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ application.phone }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Financial Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Annual Income</span>
+                        <span class="detail-value mono">₹{{ "{:,.0f}".format(application.annual_income) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Existing Debt</span>
+                        <span class="detail-value mono">₹{{ "{:,.0f}".format(application.existing_debt) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Credit Score</span>
+                        <span class="detail-value mono">{{ application.credit_score }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Employment</span>
+                        <span class="detail-value">{{ application.employment_years }} years</span>
+                    </div>
+                </div>
+
+                <div class="detail-card full-width">
+                    <h3>Loan Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Requested Amount</span>
+                        <span class="detail-value mono">₹{{ "{:,.0f}".format(application.loan_amount) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Loan Purpose</span>
+                        <span class="detail-value">{{ application.loan_purpose|title }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Risk Level</span>
+                        <span class="detail-value" style="color: {% if application.risk_level == 'LOW' %}var(--accent){% elif application.risk_level == 'MEDIUM' %}var(--warning){% else %}var(--danger){% endif %}; font-weight: 600;">{{ application.risk_level }}</span>
+                    </div>
+                </div>
+                <div class="detail-card full-width">
+                    <h3>Approval Info</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Submitted By</span>
+                        <span class="detail-value">{{ application.submitted_by or '—' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Submitted At</span>
+                        <span class="detail-value">{{ application.submitted_at[:19] if application.submitted_at else '—' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Approved/Rejected By</span>
+                        <span class="detail-value">{{ application.approved_by or '—' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Decision Time</span>
+                        <span class="detail-value">{{ application.approved_at[:19] if application.approved_at else '—' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Notes</span>
+                        <span class="detail-value">{{ application.approval_notes or '—' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="/apply" class="btn btn-primary">New Application</a>
+                <a href="/dashboard" class="btn btn-secondary">View Dashboard</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
