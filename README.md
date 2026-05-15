@@ -64,7 +64,7 @@ credit-assessment-system/
 
   **1. Clone the Repository**
   
-    git clone https://github.com/yourusername/credit-assessment-system.git
+    git clone https://github.com/dineshbangera09/creditassesment.git
     cd credit-assessment-system
     
   **2. Create and Activate Virtual Environment**
