@@ -89,3 +89,35 @@ credit-assessment-system/
     Default URL: http://192.168.42.56:5000
 
 Tip: Change the host to 0.0.0.0 in app.py for access from other devices on the network.
+
+
+## 📋 How to Use
+
+  - Visit the homepage and click Apply Now
+  - Fill in personal and financial details (PAN & Aadhaar are mandatory for score simulation)
+  - Submit to receive instant AI assessment result
+  - Go to Dashboard to view all applications
+  - Use Submit for Approval → Approve / Reject as Checker
+
+## 🔧 Configuration
+You can customize the following in app.py:
+  - Database path (DATABASE)
+  - Scoring weights and thresholds in calculate_ai_score()
+  - Loan purpose categories and their scores
+  - Server host and port
+
+## 🧪 Testing
+  - Use sample PAN like ABCDE1234F and any 12-digit Aadhaar number
+  - Try different income, debt, and employment combinations to test scoring logic
+  - Test Maker-Checker flow by submitting and then approving/rejecting from the dashboard.
+
+## 📊 Database Schema
+
+The application includes tables with:
+
+  - Applicant information
+  - Financial parameters
+  - AI-generated scores
+  - Workflow status and audit fields
+
+Schema is auto-initialized and supports safe migrations.
